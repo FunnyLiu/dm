@@ -39,6 +39,7 @@ class Opts {
         maxRefer: 3,
         registry: 'http://registry.npmjs.org/'
       },
+      //插件列表
       plugins: [
         [require.resolve('../plugins/plugin-build/index'), {}], // 内置插件-编译相关，包含各基本文件类型的loader及依赖分析插件
         [require.resolve('../plugins/plugin-audit/index'), {}], // 内置插件-审计相关
@@ -74,6 +75,7 @@ export class Context {
   public log = log;
   /** 工具模块 */
   public utils = utils;
+  // 定义声明周期钩子
   /** 流程钩子函数 */
   public hooks = {
     /** build命令钩子 */
@@ -141,6 +143,7 @@ export class Context {
     this.dist = this.getDist();
     this.npmDeps = this.getNpmDeps();
     Context.getPlugins(this.cwd, (Clazz, opts) => {
+      // 实例化
       new Clazz(this, opts)
     });
   }
@@ -167,6 +170,7 @@ export class Context {
           const Plugin = require(pluginPath) // TODO 配置文件中的npm包目前需要使用require.resolve('mod')转换
           callback(Plugin, params)
         } else {
+          // require该插件，然后执行回调
           const Plugin = require(plugin)
           callback(Plugin, {})
         }
